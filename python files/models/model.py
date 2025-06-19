@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class BioGPTModelManager:
     """BioGPT model manager for prescription generation"""
     
-    def __init__(self, model_name: str = "santanukumar07/biogpt-finetune", use_mock: bool = False, hf_token: str = "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"):
+    def __init__(self, model_name: str = "santanukumar07/biogpt-finetune", use_mock: bool = False, hf_token: str = ""):
         self.model_name = model_name
         self.current_version = "1.0"
         self.tokenizer = None
@@ -325,7 +325,7 @@ if __name__ == "__main__":
         # Test with mock model
         model_manager = BioGPTModelManager(
                 model_name="santanukumar07/biogpt-finetune",
-                hf_token="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"  # ADD YOUR TOKEN HERE
+                hf_token=""  # ADD YOUR TOKEN HERE
             )
         await model_manager.load_model()
         
