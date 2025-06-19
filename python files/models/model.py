@@ -11,7 +11,6 @@ from peft import PeftModel
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from ..data_models.data_models import PatientInput, Prescription
 
-# Only import transformers if available
 try:
     from transformers import AutoTokenizer, AutoModelForCausalLM
     TRANSFORMERS_AVAILABLE = True
@@ -43,7 +42,6 @@ class BioGPTModelManager:
             return
             
         try:
-            # Authenticate with Hugging Face if token provided
             if self.hf_token:
                 logger.info("Authenticating with Hugging Face...")
                 login(token=self.hf_token)
@@ -145,7 +143,6 @@ class BioGPTModelManager:
         diagnosis = patient_input.diagnosis.lower()
         age = patient_input.age
         
-        # Symptom-based medications
         symptom_mapping = {
             'back pain': ['Ibuprofen', 'Acetaminophen'],
             'pain': ['Acetaminophen', 'Ibuprofen'],
@@ -164,7 +161,6 @@ class BioGPTModelManager:
             if symptom in symptoms:
                 medications.extend(meds)
         
-        # Diagnosis-based medications
         diagnosis_mapping = {
             'hypertension': ['Lisinopril', 'Amlodipine'],
             'diabetes': ['Metformin', 'Glipizide'],
@@ -179,14 +175,11 @@ class BioGPTModelManager:
             if condition in diagnosis:
                 medications.extend(meds)
         
-        # Age-based considerations
         if age > 65:
             medications.extend(['Vitamin D', 'Calcium'])
         elif age < 18:
-            # Remove medications not suitable for children
             medications = [med for med in medications if 'Aspirin' not in med]
         
-        # Remove duplicates and ensure we have at least one medication
         medications = list(set(medications))
         if not medications:
             medications = ['General Supportive Care', 'Multivitamin']
@@ -198,7 +191,6 @@ class BioGPTModelManager:
         """Calculate mock confidence score"""
         confidence = 0.5  # Base confidence
         
-        # Increase confidence based on available information
         if patient_input.symptoms:
             confidence += 0.2
         if patient_input.diagnosis:
@@ -206,7 +198,6 @@ class BioGPTModelManager:
         if patient_input.age > 0:
             confidence += 0.1
         
-        # Decrease confidence for complex cases
         symptom_count = len(patient_input.symptoms.split(','))
         if symptom_count > 3:
             confidence -= 0.1
@@ -215,13 +206,11 @@ class BioGPTModelManager:
     
     def _extract_medications(self, generated_text: str) -> List[str]:
         """Extract medication names from generated text"""
-        # This is a simplified extraction - in real implementation,
-        # you would use NER or more sophisticated parsing
+
         
         medications = []
         lines = generated_text.split('\n')
         
-        # Common medication keywords
         medication_keywords = [
             'prescribe', 'medication', 'drug', 'treatment', 'therapy'
         ]
@@ -236,9 +225,7 @@ class BioGPTModelManager:
                         not word.lower() in ['the', 'and', 'for', 'with', 'patient']):
                         medications.append(word)
         
-        # Fallback: look for common medication patterns
         if not medications:
-            # Simple pattern matching for common medications
             common_meds = [
                 'Aspirin', 'Ibuprofen', 'Acetaminophen', 'Lisinopril', 
                 'Metformin', 'Amlodipine', 'Simvastatin'
@@ -252,9 +239,7 @@ class BioGPTModelManager:
     def _calculate_confidence(self, outputs, inputs) -> float:
         """Calculate confidence score from model outputs"""
         try:
-            # Simple confidence calculation based on output probabilities
-            # In real implementation, this would be more sophisticated
-            return 0.85  # Placeholder
+            return 0.85  
         except:
             return 0.5
     
@@ -269,7 +254,6 @@ class BioGPTModelManager:
     
     async def _mock_update_model(self, feedback_data: List[Dict]) -> str:
         """Mock model update for demonstration"""
-        # Simulate training time
         await asyncio.sleep(2)
         
         old_version = self.current_version
@@ -284,17 +268,10 @@ class BioGPTModelManager:
     
     async def _real_update_model(self, feedback_data: List[Dict]) -> str:
         """Real model fine-tuning with feedback data"""
-        try:
-            # In a real implementation, this would:
-            # 1. Prepare training data from feedback
-            # 2. Create data loaders
-            # 3. Fine-tune the model
-            # 4. Save the updated model
-            
+        try:            
             logger.info("Real model update not implemented in this demo")
             logger.info("Would fine-tune BioGPT with feedback data")
             
-            # For now, just update version
             old_version = self.current_version
             version_parts = self.current_version.split('.')
             version_parts[-1] = str(int(version_parts[-1]) + 1)
@@ -317,19 +294,16 @@ class BioGPTModelManager:
             'loaded': self.model is not None or self.use_mock
         }
 
-# Test the model manager
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     
     async def test_model():
-        # Test with mock model
         model_manager = BioGPTModelManager(
                 model_name="santanukumar07/biogpt-finetune",
                 hf_token=""  # ADD YOUR TOKEN HERE
             )
         await model_manager.load_model()
         
-        # Test prescription generation
         patient = PatientInput(
             symptoms="back pain, loss of appetite, constipation",
             age=74,
