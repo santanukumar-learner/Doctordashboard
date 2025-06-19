@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prescription</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900 flex justify-center items-center min-h-screen">
+  <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center mb-4">Prescription</h1>
+
+    <p class="text-lg font-medium mb-1">Patient: <%= patientName %></p>
+    <p class="text-sm text-gray-700 mb-1">Age: <%= age %></p>
+    <p class="text-sm text-gray-700 mb-4">Gender: <%= gender %></p>
+    <p class="text-sm text-gray-600 mb-4">Prescription ID: <%= prescriptionId %></p>
+
+    <form action="/generate-pdf" method="POST">
+      <input type="hidden" name="patientName" value="<%= patientName %>">
+      <input type="hidden" name="prescriptionId" value="<%= prescriptionId %>">
+      <input type="hidden" name="age" value="<%= age %>">
+      <input type="hidden" name="gender" value="<%= gender %>">
+
+      <label for="medications" class="block text-lg font-semibold mb-2">Medications</label>
+      <textarea
+        name="medications"
+        id="medications"
+        rows="8"
+        class="w-full border border-gray-300 rounded-lg p-3 mb-4 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required><%= medications.join('\n') %></textarea>
+
+      <button
+        type="submit"
+        class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
+      >
+        Generate PDF
+      </button>
+    </form>
+
+    
+  </div>
+</body>
+</html>

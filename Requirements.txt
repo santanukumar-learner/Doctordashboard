@@ -1,0 +1,10 @@
+torch
+transformers
+huggingface-hub
+mcp
+requests
+aiohttp
+numpy
+pandas
+peft
+sacremoses

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Healthcare Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-glow {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 min-h-screen text-white">
+
+  <!-- Header -->
+  <header class="p-6 bg-black bg-opacity-30">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold tracking-wide">HealthCare Portal</h1>
+      <nav>
+        <ul class="flex space-x-6 text-lg font-medium">
+          <li><a href="/" class="hover:text-blue-300 transition">Home</a></li>
+          <li><a href="/about" class="hover:text-blue-300 transition">About</a></li>
+          <li><a href="/contact" class="hover:text-blue-300 transition">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="text-center py-20 relative z-10">
+    <div class="max-w-4xl mx-auto">
+      <h3 class="text-4xl sm:text-5xl font-extrabold text-white mb-10 fade-in-up">
+        Ready to Make a Difference?
+      </h3>
+      <p class="text-lg sm:text-xl text-gray-300 mb-12 max-w-2xl mx-auto fade-in-up">
+        Whether you're managing appointments at the front desk or caring for patients as a doctor, our platform empowers you to serve efficiently and effectively.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-6 justify-center items-center fade-in-up">
+        <a href="/login" class="btn-glow bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-10 py-4 rounded-full shadow-2xl text-lg font-semibold transition duration-300 transform hover:scale-105">
+          Frontdesk
+        </a>
+        <a href="/login-doctor" class="btn-glow bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white px-10 py-4 rounded-full shadow-2xl text-lg font-semibold transition duration-300 transform hover:scale-105">
+          Doctor
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black bg-opacity-20 py-6 text-center text-gray-400 text-sm mt-20">
+    &copy; <%= new Date().getFullYear() %> HealthCare Portal. All rights reserved.
+  </footer>
+
+</body>
+</html>

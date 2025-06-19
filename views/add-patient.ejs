@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Patient</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+  <h2 class="mb-4">Add New Patient</h2>
+
+  <form action="/add-patients" method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+
+      <div class="col-md-6">
+        <label for="patientNumber" class="form-label">Patient Number</label>
+        <input type="text" class="form-control" id="patientNumber" name="patientNumber" required>
+      </div>
+
+      <div class="col-md-6">
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+
+      <div class="col-md-6">
+        <label for="contactNumber" class="form-label">Contact Number</label>
+        <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+      </div>
+
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+
+      <div class="col-md-4">
+        <label for="age" class="form-label">Age</label>
+        <input type="number" class="form-control" id="age" name="age" min="0" required>
+      </div>
+
+      <div class="col-md-4">
+        <label for="gender" class="form-label">Gender</label>
+        <select class="form-select" id="gender" name="gender" required>
+          <option value="" disabled selected>Select gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label for="bloodGroup" class="form-label">Blood Group</label>
+        <select class="form-select" id="bloodGroup" name="bloodGroup">
+          <option value="" disabled selected>Select blood group</option>
+          <option>A+</option>
+          <option>A-</option>
+          <option>B+</option>
+          <option>B-</option>
+          <option>AB+</option>
+          <option>AB-</option>
+          <option>O+</option>
+          <option>O-</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label for="address" class="form-label">Address</label>
+        <textarea class="form-control" id="address" name="address" rows="2"></textarea>
+      </div>
+
+      <div class="col-md-6">
+        <label for="profilePicture" class="form-label">Profile Picture</label>
+        <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">
+      </div>
+
+      <div class="col-md-12">
+        <label for="medicalHistory" class="form-label">Medical History PDFs</label>
+        <input type="file" class="form-control" id="medicalHistory" name="medicalHistory" accept="application/pdf" multiple>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <button type="submit" class="btn btn-primary">Add Patient</button>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

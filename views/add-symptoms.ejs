@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Symptoms</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-xl">
+    <h1 class="text-2xl font-bold mb-6 text-center">Add Patient Details</h1>
+
+    <form action="/submit-symptoms" method="POST">
+      <!-- Name -->
+<label for="name" class="block text-lg font-medium mb-2">Patient Name</label>
+<input
+  type="text"
+  id="name"
+  name="name"
+  class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  placeholder="Enter full name"
+  required
+/>
+
+      <!-- Gender -->
+      <label for="gender" class="block text-lg font-medium mb-2">Gender</label>
+      <select
+        id="gender"
+        name="gender"
+        class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+      >
+        <option value="" disabled selected>Select gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <!-- Age -->
+      <label for="age" class="block text-lg font-medium mb-2">Age</label>
+      <input
+        type="number"
+        id="age"
+        name="age"
+        min="0"
+        class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Enter age"
+        required
+      />
+
+      <!-- Symptoms -->
+      <label for="symptoms" class="block text-lg font-medium mb-2">Symptoms</label>
+      <textarea
+        id="symptoms"
+        name="symptoms"
+        rows="5"
+        class="w-full p-4 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Describe the patient's symptoms in detail..."
+        required
+      ></textarea>
+
+      <!-- Diagnosis -->
+      <label for="diagnosis" class="block text-lg font-medium mb-2">Diagnosis</label>
+      <input
+        type="text"
+        id="diagnosis"
+        name="diagnosis"
+        class="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Enter any existing diagnosis"
+        required
+      />
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>

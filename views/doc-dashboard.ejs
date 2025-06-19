@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Welcome Dr. <%= doctor.name %></h1>
+
+    <% doctor.schedule.forEach(scheduleEntry => { %>
+      <h2 class="text-xl font-semibold mb-4">Appointments on <%= new Date(scheduleEntry.date).toDateString() %></h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <% scheduleEntry.appointments.forEach(appt => { %>
+          <div class="bg-white shadow-md rounded-lg p-4 border border-gray-200">
+            <% if (appt.patient.profilePicture) { %>
+              <img src="/uploads/<%= appt.patient.profilePicture %>" alt="Profile Picture" class="w-20 h-20 rounded-full mx-auto mb-2 object-cover">
+            <% } %>
+
+            <h3 class="text-lg font-bold text-center mb-1"><%= appt.patient.name %></h3>
+            <p class="text-sm text-center text-gray-600 mb-3">Patient No: <%= appt.patient.patientNumber %></p>
+
+            <ul class="text-sm mb-4">
+              <li><strong>Time:</strong> <%= appt.time %></li>
+              <li><strong>Status:</strong> <%= appt.status %></li>
+              <li><strong>Gender:</strong> <%= appt.patient.gender %></li>
+              <li><strong>Age:</strong> <%= appt.patient.age %></li>
+              <li><strong>Blood Group:</strong> <%= appt.patient.bloodGroup %></li>
+              <li><strong>Email:</strong> <%= appt.patient.email %></li>
+              <li><strong>Contact:</strong> <%= appt.patient.contactNumber %></li>
+              <li><strong>Address:</strong> <%= appt.patient.address || 'N/A' %></li>
+              <% if (appt.patient.emergencyContact?.name) { %>
+                <li class="mt-2 font-semibold">Emergency Contact</li>
+                <li>Name: <%= appt.patient.emergencyContact.name %></li>
+                <li>Phone: <%= appt.patient.emergencyContact.phone %></li>
+                <li>Relation: <%= appt.patient.emergencyContact.relation %></li>
+              <% } %>
+              <% if (appt.patient.allergies.length) { %>
+                <li class="mt-2"><strong>Allergies:</strong> <%= appt.patient.allergies.join(', ') %></li>
+              <% } %>
+            </ul>
+
+            <% if (appt.patient.medicalHistory?.length) { %>
+              <button 
+                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded view-history-btn mb-2"
+                data-history='<%= JSON.stringify(appt.patient.medicalHistory) %>'
+              >
+                View Medical History
+              </button>
+            <% } %>
+
+            <!-- Add Symptoms Button -->
+            <form action="/add-symptoms" method="GET">
+              <input type="hidden" name="patientId" value="<%= appt.patient._id %>">
+              <button 
+                type="submit"
+                class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded mt-2"
+              >
+                Add Symptoms
+              </button>
+            </form>
+
+          </div>
+        <% }) %>
+      </div>
+    <% }) %>
+  </div>
+
+  <script>
+    document.querySelectorAll('.view-history-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const history = JSON.parse(button.dataset.history);
+        history.forEach(fileObj => {
+          const filename = typeof fileObj === 'string' ? fileObj : fileObj.fileUrl;
+          if (filename) {
+            window.open(`/uploads/${filename}`, '_blank');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

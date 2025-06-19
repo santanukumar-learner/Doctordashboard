@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= doctor.name %> - Daily Schedule</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .schedule-container {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 
+                  0 0 0 1px rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .doctor-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #718096;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .appointments-section {
+      background: rgba(102, 126, 234, 0.05);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .appointment-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border-left: 4px solid #667eea;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .appointment-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .appointment-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .appointment-time {
+      font-weight: 600;
+      color: #667eea;
+      font-size: 16px;
+    }
+
+    .datetime-display {
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .current-date {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+
+    .current-time {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+      font-family: 'Courier New', monospace;
+    }
+
+    .timeline-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .timeline {
+      position: relative;
+      height: 50px;
+      background: linear-gradient(90deg, #f7fafc 0%, #edf2f7 100%);
+      border-radius: 25px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .time-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+      color: #718096;
+      margin-top: 12px;
+      padding: 0 4px;
+    }
+
+    .marker {
+      position: absolute;
+      width: 6px;
+      height: 50px;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+
+    .start-marker {
+      background: linear-gradient(180deg, #48bb78, #38a169);
+      box-shadow: 0 2px 8px rgba(72, 187, 120, 0.4);
+    }
+
+    .end-marker {
+      background: linear-gradient(180deg, #ed8936, #dd6b20);
+      box-shadow: 0 2px 8px rgba(237, 137, 54, 0.4);
+    }
+
+    .current-marker {
+      background: linear-gradient(180deg, #667eea, #764ba2);
+      box-shadow: 0 2px 12px rgba(102, 126, 234, 0.6);
+      z-index: 10;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .marker::after {
+      content: attr(data-time);
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(45, 55, 72, 0.9);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      backdrop-filter: blur(10px);
+    }
+
+    .marker:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .availability-bar {
+      position: absolute;
+      height: 20px;
+      background: linear-gradient(90deg, rgba(72, 187, 120, 0.3), rgba(72, 187, 120, 0.1));
+      border-radius: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 2px solid rgba(72, 187, 120, 0.4);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-available {
+      background: rgba(72, 187, 120, 0.1);
+      color: #38a169;
+    }
+
+    @media (max-width: 768px) {
+      .schedule-container {
+        margin: 10px;
+        padding: 24px;
+      }
+      
+      .legend {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="schedule-container">
+    <div class="header">
+      <div class="doctor-avatar"><%= doctor.name.charAt(0) %></div>
+      <h2><%= doctor.name %></h2>
+      <p class="subtitle">Medical Professional</p>
+      <div class="status-badge status-available">
+        <span>●</span> Available Today
+      </div>
+    </div>
+
+    <div class="appointments-section">
+      <div class="section-title">
+        📅 Today's Appointments
+      </div>
+      <% doctor.schedule.forEach(scheduleEntry => { %>
+        <% scheduleEntry.appointments.forEach(appt => { %>
+          <div class="appointment-card">
+            <div class="appointment-time"><%= appt.time %></div>
+            <div style="color: #718096; font-size: 14px; margin-top: 4px;">Appointment</div>
+          </div>
+        <% }) %>
+      <% }) %>
+    </div>
+
+    <div class="datetime-display">
+      <div class="current-date" id="currentDate"></div>
+      <div class="current-time" id="currentTime"></div>
+    </div>
+
+    <div class="timeline-section">
+      <div class="section-title">
+        🕐 Daily Timeline
+      </div>
+      <div class="timeline" id="timeline"></div>
+      <div class="time-labels">
+        <span>12 AM</span>
+        <span>6 AM</span>
+        <span>12 PM</span>
+        <span>6 PM</span>
+        <span>12 AM</span>
+      </div>
+      
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #48bb78, #38a169);"></div>
+          <span>Start Time</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #ed8936, #dd6b20);"></div>
+          <span>End Time</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+          <span>Current Time</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function convertTo24Hour(timeStr) {
+      const [time, modifier] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    }
+
+    function timeToPercent(timeStr) {
+      const { hours, minutes } = convertTo24Hour(timeStr);
+      const totalMinutes = hours * 60 + minutes;
+      return (totalMinutes / 1440) * 100;
+    }
+
+    // Sample data - replace with actual template variables
+    const start = "<%= doctor.availableTime.start %>";
+    const end = "<%= doctor.availableTime.end %>";
+
+    const startPercent = timeToPercent(start);
+    const endPercent = timeToPercent(end);
+
+    const timeline = document.querySelector('.timeline');
+
+    // Create availability bar
+    const availabilityBar = document.createElement('div');
+    availabilityBar.className = 'availability-bar';
+    availabilityBar.style.left = `${startPercent}%`;
+    availabilityBar.style.width = `${endPercent - startPercent}%`;
+    timeline.appendChild(availabilityBar);
+
+    // Create markers
+    const startMarker = document.createElement('div');
+    startMarker.className = 'marker start-marker';
+    startMarker.style.left = `${startPercent}%`;
+    startMarker.setAttribute('data-time', start);
+
+    const endMarker = document.createElement('div');
+    endMarker.className = 'marker end-marker';
+    endMarker.style.left = `${endPercent}%`;
+    endMarker.setAttribute('data-time', end);
+
+    const currentTimeMarker = document.createElement('div');
+    currentTimeMarker.className = 'marker current-marker';
+
+    timeline.appendChild(startMarker);
+    timeline.appendChild(endMarker);
+    timeline.appendChild(currentTimeMarker);
+
+    // Real-time clock and moving time marker
+    function updateClockAndMarker() {
+      const now = new Date();
+
+      // Update date
+      const dateString = now.toLocaleDateString(undefined, {
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric'
+      });
+      document.getElementById('currentDate').innerText = dateString;
+
+      // Update time
+      const timeString = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      document.getElementById('currentTime').innerText = timeString;
+
+      // Update current marker
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const nowPercent = (nowMinutes / 1440) * 100;
+      currentTimeMarker.style.left = `${nowPercent}%`;
+      
+      const currentTime12 = now.toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      currentTimeMarker.setAttribute('data-time', currentTime12);
+    }
+
+    // Add interactive hover effects
+    document.querySelectorAll('.appointment-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.background = 'white';
+      });
+    });
+
+    updateClockAndMarker();
+    setInterval(updateClockAndMarker, 1000);
+  </script>
+</body>
+</html>

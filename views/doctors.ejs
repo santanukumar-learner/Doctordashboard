@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctors List - MediCare Clinic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+      padding: 40px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+    }
+
+    .header h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header p {
+      font-size: 18px;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 30px;
+    }
+
+    .doctor-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .doctor-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #2196F3, #4CAF50, #FF9800);
+    }
+
+    .doctor-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .doctor-image-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doctor-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .doctor-card:hover .doctor-image {
+      transform: scale(1.05);
+    }
+
+    .rating-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 193, 7, 0.9);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-content {
+      padding: 25px;
+    }
+
+    .doctor-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .specialization {
+      font-size: 16px;
+      color: #2196F3;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding: 6px 12px;
+      background: #e3f2fd;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .doctor-info {
+      margin-bottom: 20px;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .info-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+      fill: #666;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #333;
+      margin-right: 8px;
+      min-width: 80px;
+    }
+
+    .info-value {
+      color: #666;
+      flex: 1;
+    }
+
+    .qualifications {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .qualification-tag {
+      background: #f0f8ff;
+      color: #1976d2;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .availability {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+
+    .availability-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .days-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .day-tag {
+      background: #4caf50;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .time-slot {
+      color: #666;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .schedule-btn {
+      background: #e3f2fd;
+      color: #1976d2;
+      border: 2px solid #e3f2fd;
+    }
+
+    .schedule-btn:hover {
+      background: #1976d2;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(25, 118, 210, 0.3);
+    }
+
+    .appointment-btn {
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      color: white;
+      border: 2px solid transparent;
+    }
+
+    .appointment-btn:hover {
+      background: linear-gradient(135deg, #45a049, #388e3c);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .btn-icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .no-doctors {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border-radius: 20px;
+      color: #666;
+      font-size: 18px;
+    }
+
+    .no-doctors-icon {
+      width: 64px;
+      height: 64px;
+      fill: #ddd;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .header {
+        padding: 30px 20px;
+      }
+      
+      .header h1 {
+        font-size: 28px;
+      }
+      
+      .card-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    .experience-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(33, 150, 243, 0.9);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="/post_home" class="close-btn">×</a>
+    <h1>Available Doctors</h1>
+    <p>Explore profiles, specializations, availability and contact information</p>
+  </div>
+
+  <div class="container">
+    <% if (doctors.length === 0) { %>
+      <div class="no-doctors">
+        <svg class="no-doctors-icon" viewBox="0 0 24 24">
+          <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+        </svg>
+        <h3>No doctors available at the moment</h3>
+        <p>Please check back later or contact administration.</p>
+      </div>
+    <% } else { %>
+      <% doctors.forEach(doctor => { %>
+        <div class="doctor-card">
+          <div class="doctor-image-container">
+            <img src="<%= doctor.profilePicture || '/images/default-doctor.jpg' %>" alt="<%= doctor.name %>" class="doctor-image">
+            <div class="experience-badge"><%= doctor.experience %> years</div>
+            <% if (doctor.ratings > 0) { %>
+              <div class="rating-badge">
+                ★ <%= doctor.ratings.toFixed(1) %>
+              </div>
+            <% } %>
+          </div>
+          
+          <div class="card-content">
+            <h2 class="doctor-name"><%= doctor.name %>(<%= doctor.doctorNumber %>)</h2>
+            <div class="specialization"><%= doctor.specialization %></div>
+            
+            <div class="doctor-info">
+              <div class="info-row">
+                <svg class="info-icon" viewBox="0 0 24 24">
+                  <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+                </svg>
+                <span class="info-label">Phone:</span>
+                <span class="info-value"><%= doctor.phone %></span>
+              </div>
+              
+              <div class="info-row">
+                <svg class="info-icon" viewBox="0 0 24 24">
+                  <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/>
+                </svg>
+                <span class="info-label">Email:</span>
+                <span class="info-value"><%= doctor.email %></span>
+              </div>
+              
+              <div class="info-row">
+                <svg class="info-icon" viewBox="0 0 24 24">
+                  <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/>
+                </svg>
+                <span class="info-label">Qualifications:</span>
+              </div>
+              <div class="qualifications">
+                <% doctor.qualifications.forEach(qual => { %>
+                  <span class="qualification-tag"><%= qual %></span>
+                <% }); %>
+              </div>
+            </div>
+
+            <% if (doctor.availableDays.length > 0) { %>
+              <div class="availability">
+                <div class="availability-title">
+                  <svg style="width: 16px; height: 16px; fill: #4caf50; margin-right: 6px;" viewBox="0 0 24 24">
+                    <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+                  </svg>
+                  Available Schedule
+                </div>
+                <div class="days-container">
+                  <% doctor.availableDays.forEach(day => { %>
+                    <span class="day-tag"><%= day %></span>
+                  <% }); %>
+                </div>
+                <% if (doctor.availableTime.start && doctor.availableTime.end) { %>
+                  <div class="time-slot">
+                    🕐 <%= doctor.availableTime.start %> - <%= doctor.availableTime.end %>
+                  </div>
+                <% } %>
+              </div>
+            <% } %>
+
+            <div class="card-actions">
+              <a href="/doctor/<%= doctor._id %>/schedule" class="action-btn schedule-btn">
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H6V1H8V3H16V1H18V3H19M19,19V8H5V19H19M7,10H9V12H7V10M15,10H17V12H15V10M11,10H13V12H11V10M7,14H9V16H7V14M15,14H17V16H15V14M11,14H13V16H11V14Z"/>
+                </svg>
+                See Schedule
+              </a>
+
+            <!-- ////////////////////////////////////////////////////////////////////////// -->
+
+
+<div id="recorderModal" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+">
+  <div style="
+    background-color: #ffffff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    width: 360px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    text-align: center;
+  ">
+    <h2 style="font-size: 20px; color: #222; margin-bottom: 20px;">🎙️ Voice Message</h2>
+
+    <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px;">
+      <button onclick="startRecording()" style="
+        flex: 1;
+        padding: 10px;
+        background-color: #007BFF;
+        border: none;
+        color: white;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      " onmouseover="this.style.backgroundColor='#0069d9'" onmouseout="this.style.backgroundColor='#007BFF'">Start</button>
+
+      <button onclick="stopRecording()" style="
+        flex: 1;
+        padding: 10px;
+        background-color: #DC3545;
+        border: none;
+        color: white;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      " onmouseover="this.style.backgroundColor='#c82333'" onmouseout="this.style.backgroundColor='#DC3545'">Stop</button>
+    </div>
+
+    <audio id="audioPlayback" controls style="width: 100%; display: none; margin-bottom: 20px; border-radius: 6px;"></audio>
+
+
+
+    <button onclick="submitRecording()" id="submitBtn" style="
+  padding: 10px 20px;
+  background-color: #28a745;
+  border: none;
+  color: white;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: none;
+  margin-bottom: 10px;
+" onmouseover="this.style.backgroundColor='#218838'" onmouseout="this.style.backgroundColor='#28a745'">Submit</button>
+
+
+    <button onclick="closeModal()" style="
+      padding: 10px 20px;
+      background-color: #6c757d;
+      border: none;
+      color: white;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    " onmouseover="this.style.backgroundColor='#5a6268'" onmouseout="this.style.backgroundColor='#6c757d'">Close</button>
+  </div>
+</div>
+
+
+            <!-- //////////////////////////////////////////////////////////////////////////////////// -->
+
+              <a href="#" onclick="openRecorderModal('<%= doctor._id %>')" class="action-btn appointment-btn">
+                 <svg class="btn-icon" viewBox="0 0 24 24">
+                     <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                       </svg>
+                          Book Appointment
+                </a>
+
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } %>
+  </div>
+
+  <script>
+    // Add loading animation for images
+    document.querySelectorAll('.doctor-image').forEach(img => {
+      img.addEventListener('load', function() {
+        this.style.opacity = '1';
+      });
+      
+      img.addEventListener('error', function() {
+        this.src = '/images/default-doctor.jpg';
+        this.alt = 'Default Doctor Image';
+      });
+    });
+
+    // Add stagger animation for cards
+    window.addEventListener('load', function() {
+      const cards = document.querySelectorAll('.doctor-card');
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    });
+
+    // Initialize cards with hidden state
+    document.querySelectorAll('.doctor-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'all 0.5s ease';
+    });
+
+
+
+
+
+    let mediaRecorder;
+  let audioChunks = [];
+  let audioBlob = null; // Store the last recorded blob
+
+  function openRecorderModal(doctorId) {
+    document.getElementById('recorderModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('recorderModal').style.display = 'none';
+    document.getElementById('audioPlayback').style.display = 'none';
+    document.getElementById('audioPlayback').src = '';
+    document.getElementById('submitBtn').style.display = 'none';
+    audioBlob = null;
+  }
+
+  async function startRecording() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = event => {
+      if (event.data.size > 0) {
+        audioChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+  audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+  const audioUrl = URL.createObjectURL(audioBlob);
+  const audio = document.getElementById('audioPlayback');
+  audio.src = audioUrl;
+  audio.style.display = 'block';
+
+  // ✅ Show the Submit button
+  document.getElementById('submitBtn').style.display = 'inline-block';
+};
+
+
+    mediaRecorder.start();
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+  }
+
+  function submitRecording() {
+    if (audioBlob) {
+      uploadAudio(audioBlob);
+      alert("Audio submitted!");
+      closeModal();
+    } else {
+      alert("Please record audio first.");
+    }
+  }
+
+  function uploadAudio(blob) {
+    const formData = new FormData();
+    formData.append('audio', blob, 'voice-message.webm');
+
+    fetch('/upload-audio', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Upload success:', data);
+    })
+    .catch(error => {
+      console.error('Upload error:', error);
+    });
+  }
+
+  </script>
+</body>
+</html>
