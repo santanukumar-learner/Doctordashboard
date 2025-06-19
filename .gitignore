@@ -1,0 +1,22 @@
+node_modules
+# Node.js
+node_modules/
+package-lock.json
+
+# Python
+.venv/
+*.pyc
+__pycache__/
+*.db
+
+# Environment variables
+.env
+
+# VSCode and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
