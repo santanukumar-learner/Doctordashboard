@@ -1,24 +1,15 @@
-#!/usr/bin/env python3
-"""
-Simple example of using the MCP Medical System
-Run this after starting the server
-"""
-
 import asyncio
 import json
 from ..client.mcp_client import MCPClient
 
 async def simple_example():
-    """Simple example of using the MCP system"""
     
-    # Create client instance
     client = MCPClient("ws://localhost:8765")
     
     print("🏥 MCP Medical System Example")
     print("-" * 40)
     
     try:
-        # Step 1: Connect to server
         print("1. Connecting to server...")
         if not await client.connect():
             print("❌ Failed to connect to server")
@@ -26,7 +17,6 @@ async def simple_example():
             return
         print("✅ Connected successfully")
         
-        # Step 2: Prepare patient data
         print("\n2. Preparing patient data...")
         patient_data = {
             "name": "John Smith",
@@ -42,14 +32,12 @@ async def simple_example():
         print(f"   Medical History: {', '.join(patient_data['medical_history'])}")
         print(f"   Allergies: {', '.join(patient_data['allergies'])}")
         
-        # Step 3: Generate prescription
         print("\n3. Generating prescription...")
         result = await client.generate_prescription(patient_data, symptoms)
         
         if result.get("status") == "success":
             print("✅ Prescription generated successfully!")
             
-            # Display prescription details
             prescription = result.get("prescription", {})
             prescription_id = result.get("prescription_id")
             
@@ -65,7 +53,6 @@ async def simple_example():
             
             print(f"\n📝 Notes: {prescription.get('notes')}")
             
-            # Step 4: Send doctor feedback
             print("\n4. Sending doctor feedback...")
             feedback_data = {
                 "original_prescription": prescription,
@@ -86,7 +73,6 @@ async def simple_example():
             else:
                 print(f"❌ Error sending feedback: {feedback_result.get('message')}")
             
-            # Step 5: Update model (optional)
             print("\n5. Requesting model update...")
             update_result = await client.update_model()
             
@@ -104,7 +90,6 @@ async def simple_example():
         print(f"❌ Error: {e}")
     
     finally:
-        # Step 6: Disconnect
         print("\n6. Disconnecting...")
         await client.disconnect()
         print("✅ Disconnected from server")
@@ -124,7 +109,6 @@ async def interactive_example():
         
         print("✅ Connected to server")
         
-        # Get user input
         print("\nEnter patient information:")
         name = input("Patient name: ").strip()
         age = int(input("Patient age: "))
